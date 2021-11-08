@@ -57,5 +57,6 @@ def coverage():
     coverage_url ="https://sandbox.bluebutton.cms.gov/v2/fhir/Coverage"
     return jsonify(client.get(coverage_url).json());
 
+
 if __name__ == '__main__':
     app.run(debug=True)
