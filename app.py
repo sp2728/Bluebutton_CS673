@@ -23,6 +23,10 @@ username= 'BBUser00000'
 password= 'PW00000!'
 
 @app.route('/')
+def welcome():
+    return "Welcome to EMR Integration app";
+
+@app.route('/login/callback')
 def bluebutton_login_callback():
     authorization_response = request.url;
     print(session.get('oauth_state'))
