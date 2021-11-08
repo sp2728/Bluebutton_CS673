@@ -29,7 +29,6 @@ def welcome():
 @app.route('/login/callback')
 def bluebutton_login_callback():
     authorization_response = request.url;
-    print(session.get('oauth_state'))
     client = OAuth2Session(CLIENT_ID, CLIENT_SECRET, state=session['oauth_state'])
     token = client.fetch_token(ACCESS_TOKEN_URL, authorization_response=authorization_response)
     session['oauth_token'] = token
@@ -44,10 +43,9 @@ def bluebutton_login():
 
 @app.route('/patient/profile')
 def patient_profile():
-    client = OAuth2Session(CLIENT_ID, token=session['oauth_token'])
-    print(session['oauth_token'])
+    client_url = OAuth2Session(CLIENT_ID, CLIENT_SECRET, token=session['oauth_token'])
     profile_url ="https://sandbox.bluebutton.cms.gov/v2/fhir/Patient?patient=-20140000010000"
-    return jsonify(client.get(profile_url).json());
+    return jsonify(client_url.get(profile_url).json());
 
 @app.route('/patient/explanation_of_benefit')
 def explanation_of_benefit():
