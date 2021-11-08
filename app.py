@@ -24,7 +24,7 @@ password= 'PW00000!'
 
 @app.route('/')
 def welcome():
-    return "Welcome to EMR Integration app";
+    return "Welcome to EMR Integration with Bluebutton"
 
 @app.route('/login/callback')
 def bluebutton_login_callback():
@@ -33,7 +33,6 @@ def bluebutton_login_callback():
     client = OAuth2Session(CLIENT_ID, CLIENT_SECRET, state=session['oauth_state'])
     token = client.fetch_token(ACCESS_TOKEN_URL, authorization_response=authorization_response)
     session['oauth_token'] = token
-    print(token)
     return redirect('/patient/profile')
 
 @app.route('/auth/login')
@@ -46,6 +45,7 @@ def bluebutton_login():
 @app.route('/patient/profile')
 def patient_profile():
     client = OAuth2Session(CLIENT_ID, token=session['oauth_token'])
+    print(session['oauth_token'])
     profile_url ="https://sandbox.bluebutton.cms.gov/v2/fhir/Patient?patient=-20140000010000"
     return jsonify(client.get(profile_url).json());
 
@@ -60,7 +60,6 @@ def coverage():
     client = OAuth2Session(CLIENT_ID, token=session['oauth_token'])
     coverage_url ="https://sandbox.bluebutton.cms.gov/v2/fhir/Coverage"
     return jsonify(client.get(coverage_url).json());
-
 
 if __name__ == '__main__':
     app.run(debug=True)
