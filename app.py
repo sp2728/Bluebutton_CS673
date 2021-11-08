@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, session, url_for
+from flask import Flask, request, jsonify, session
 from authlib.integrations.flask_client import OAuth
 from authlib.integrations.requests_client import OAuth2Session
 from flask import redirect
@@ -21,6 +21,8 @@ REDIRECT_URI = os.getenv('REDIRECT_URI')
 SCOPE = "patient/ExplanationOfBenefit.read patient/Coverage.read patient/Patient.read profile"
 username= 'BBUser00000'
 password= 'PW00000!'
+client = OAuth2Session(CLIENT_ID, CLIENT_SECRET, scope=SCOPE, redirect_uri=REDIRECT_URI)
+
 
 @app.route('/')
 def welcome():
@@ -43,19 +45,19 @@ def bluebutton_login():
 
 @app.route('/patient/profile')
 def patient_profile():
-    client_url = OAuth2Session(CLIENT_ID, CLIENT_SECRET, token=session['oauth_token'])
+    client_url = OAuth2Session(CLIENT_ID,CLIENT_SECRET, token=session['oauth_token'])
     profile_url ="https://sandbox.bluebutton.cms.gov/v2/fhir/Patient?patient=-20140000010000"
     return jsonify(client_url.get(profile_url).json());
 
 @app.route('/patient/explanation_of_benefit')
 def explanation_of_benefit():
-    client = OAuth2Session(CLIENT_ID, token=session['oauth_token'])
+    client = OAuth2Session(CLIENT_ID, CLIENT_SECRET, token=session['oauth_token'])
     explanation_of_benefit_url ="https://sandbox.bluebutton.cms.gov/v2/fhir/Coverage"
     return jsonify(client.get(explanation_of_benefit_url).json());
 
 @app.route('/patient/coverage')
 def coverage():
-    client = OAuth2Session(CLIENT_ID, token=session['oauth_token'])
+    client = OAuth2Session(CLIENT_ID, CLIENT_SECRET, token=session['oauth_token'])
     coverage_url ="https://sandbox.bluebutton.cms.gov/v2/fhir/Coverage"
     return jsonify(client.get(coverage_url).json());
 
