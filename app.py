@@ -46,7 +46,7 @@ def bluebutton_login():
 @app.route('/patient/profile')
 def patient_profile():
     client_url = OAuth2Session(CLIENT_ID,CLIENT_SECRET, token=session['oauth_token'])
-    profile_url ="https://sandbox.bluebutton.cms.gov/v2/fhir/Patient?patient=-20140000010000"
+    profile_url ="https://sandbox.bluebutton.cms.gov/v2/fhir/Patient"
     return jsonify(client_url.get(profile_url).json());
 
 @app.route('/patient/explanation_of_benefit')
