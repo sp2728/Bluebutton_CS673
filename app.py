@@ -29,8 +29,8 @@ class Users(db.Model):
 
 oauth = OAuth(app)
 
-API_BASE = os.getenv('API_BASE')
-ACCESS_TOKEN_URL = os.getenv('ACCESS_TOKEN_URL')
+API_BASE = "https://sandbox.bluebutton.cms.gov/v2/o/authorize/"
+ACCESS_TOKEN_URL = "https://sandbox.bluebutton.cms.gov/v2/o/token/"
 CLIENT_ID = os.getenv('CLIENT_ID')
 CLIENT_SECRET = os.getenv('CLIENT_SECRET')
 REDIRECT_URI = os.getenv('REDIRECT_URI')
@@ -47,7 +47,9 @@ def welcome():
 @app.route('/login/callback')
 def bluebutton_login_callback():
     authorization_response = request.url;
-    session["oauth_code"] = request.args.get('code')
+
+    code = request.args.get('code')
+    state = request.args.get('state')
     print(authorization_response);
     client = OAuth2Session(CLIENT_ID, CLIENT_SECRET, state=session['oauth_state'])
     token = client.fetch_token(ACCESS_TOKEN_URL, authorization_response=authorization_response)
@@ -58,7 +60,6 @@ def bluebutton_login_callback():
 def bluebutton_login():
     client = OAuth2Session(CLIENT_ID, CLIENT_SECRET, scope=SCOPE, redirect_uri=REDIRECT_URI)
     uri, state = client.create_authorization_url(API_BASE)
-    print(state)
     session["oauth_state"] = state
     return redirect(uri)
 
@@ -82,10 +83,8 @@ def coverage():
 
 @app.route('/patient/re-authorize')
 def reauthorize():
-    client = OAuth2Session(CLIENT_ID, CLIENT_SECRET, state=session['oauth_state'])
-    authorization_response ='http://127.0.0.1:5000/login/callback?code='+session['oauth_code']+'&state='+session['oauth_state']
-    token = client.fetch_token(ACCESS_TOKEN_URL, method="GET", authorization_response=authorization_response)
-    session['oauth_token'] = token
+    url = "https://sandbox.bluebutton.cms.gov/v2/o/authorize/?response_type=code&client_id="+CLIENT_ID+"&redirect_uri="+REDIRECT_URI+"&state="+session['oauth_state']
+    req = requests.get(url)
     return {};
 
 

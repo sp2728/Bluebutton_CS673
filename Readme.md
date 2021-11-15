@@ -15,6 +15,14 @@ Install the requirement
 
 ```pip install -r requirements.txt```
 
+Create a .env file in you local and add the secret keys and redirect URI
+
+```
+CLIENT_ID = xxxxxxxxx
+CLIENT_SECRET = xxxxxxx
+REDIRECT_URI= xxxxxxx
+```
+
 Run the application using
 
 ```python app.py```
